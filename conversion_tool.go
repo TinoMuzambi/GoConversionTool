@@ -19,6 +19,23 @@ type Length struct {
 	toLightYear    float64
 }
 
+func NewLength(tometer float64, tocentimeter float64, tomillimeter float64, tokilometer float64, tonauticalmile float64,
+	tomile float64, toyard float64, tofoot float64, toinch float64, tolightyear float64) (*Length, error) {
+	length := &Length{
+		toMeter:        tometer,
+		toCentimeter:   tocentimeter,
+		toMillimeter:   tomillimeter,
+		toKilometer:    tokilometer,
+		toNauticalMile: tonauticalmile,
+		toMile:         tomile,
+		toYard:         toyard,
+		toFoot:         tofoot,
+		toInch:         toinch,
+		toLightYear:    tolightyear,
+	}
+	return length, nil
+}
+
 type Area struct {
 	toSquareMeter      float64
 	toSquareCentimeter float64
@@ -103,6 +120,9 @@ Make a selection of the type of conversion you want by entering the number.
 7. Mass
 8. Numeral System
 `)
+	length, _ := NewLength(1.00, 100.0, 1000.0, 0.001,
+		0.000539956803, 0.000621371192, 1.0936133, 3.2808399, 39.3700787,
+		0.00000000000000010570008)
 	text, _ := reader.ReadString('\n')
 	fmt.Println(text)
 }
