@@ -109,7 +109,7 @@ func (l *Length) convertLength(fromUnit string, toUnit string, num float64) (flo
 //	toCubicFoot       float64
 //	toCubicInch       float64
 //	toCubicYard       float64
-//	toAcreFloat       float64
+//	toAcreFoot       float64
 //}
 //
 //type Temperature struct {
@@ -124,19 +124,19 @@ func (l *Length) convertLength(fromUnit string, toUnit string, num float64) (flo
 //	toKilometerPerSecond float64
 //	toKnot               float64
 //	toMilePerHour        float64
-//	toFoodPerSecond      float64
+//	toFootPerSecond      float64
 //	toInchPerSecond      float64
 //	toMach               float64
 //}
 //
 //type Time struct {
 //	toSecond      float64
+//	toMillisecond float64
 //	toMinute      float64
 //	toHour        float64
 //	toDay         float64
 //	toWeek        float64
 //	toYear        float64
-//	toMillisecond float64
 //}
 //
 //type Mass struct {
@@ -178,9 +178,223 @@ Make a selection of the type of conversion you want by entering the number.
 	unit, _ := reader.ReadString('\n')
 	switch unit {
 	case "1\n":
-		fmt.Print("Choose the unit to convert from:\n")
+		fmt.Print(`
+Choose the unit to convert from:
+meter
+centimeter
+millimeter
+kilometer
+nautmile
+mile
+yard
+foot
+inch
+lightyear
+`)
 		fromUnit, _ := reader.ReadString('\n')
-		fmt.Print("Choose the unit to convert to:\n")
+		fmt.Print(`
+Choose the unit to convert to:
+meter
+centimeter
+millimeter
+kilometer
+nautmile
+mile
+yard
+foot
+inch
+lightyear
+`)
+		toUnit, _ := reader.ReadString('\n')
+		fmt.Print("Enter the number:\n")
+		num, _ := reader.ReadString('\n')
+		convNum, _ := strconv.ParseFloat(num[:len(num)-1], 64)
+		ans, _ := length.convertLength(fromUnit, toUnit, convNum)
+		fmt.Println(ans)
+	case "2\n":
+		fmt.Print(`
+Choose the unit to convert from:
+sqmeter
+sqcentimeter
+sqmillimeter
+hectare
+acre
+sqmile
+sqyard
+sqfoot
+sqinch
+`)
+		fromUnit, _ := reader.ReadString('\n')
+		fmt.Print(`
+Choose the unit to convert to:
+sqmeter
+sqcentimeter
+sqmillimeter
+hectare
+acre
+sqmile
+sqyard
+sqfoot
+sqinch
+`)
+		toUnit, _ := reader.ReadString('\n')
+		fmt.Print("Enter the number:\n")
+		num, _ := reader.ReadString('\n')
+		convNum, _ := strconv.ParseFloat(num[:len(num)-1], 64)
+		ans, _ := length.convertLength(fromUnit, toUnit, convNum)
+		fmt.Println(ans)
+	case "3\n":
+		fmt.Print(`
+Choose the unit to convert from:
+cbmeter
+cbcentimeter
+cbmillimeter
+liter
+milliliter
+cbyard
+cbfoot
+cbinch
+acrefoot
+`)
+		fromUnit, _ := reader.ReadString('\n')
+		fmt.Print(`
+Choose the unit to convert to:
+cbmeter
+cbcentimeter
+cbmillimeter
+liter
+milliliter
+cbyard
+cbfoot
+cbinch
+acrefoot
+`)
+		toUnit, _ := reader.ReadString('\n')
+		fmt.Print("Enter the number:\n")
+		num, _ := reader.ReadString('\n')
+		convNum, _ := strconv.ParseFloat(num[:len(num)-1], 64)
+		ans, _ := length.convertLength(fromUnit, toUnit, convNum)
+		fmt.Println(ans)
+	case "4\n":
+		fmt.Print(`
+Choose the unit to convert from:
+celsius
+fahrenheit
+kelvin
+`)
+		fromUnit, _ := reader.ReadString('\n')
+		fmt.Print(`
+Choose the unit to convert to:
+celsius
+fahrenheit
+kelvin
+`)
+		toUnit, _ := reader.ReadString('\n')
+		fmt.Print("Enter the number:\n")
+		num, _ := reader.ReadString('\n')
+		convNum, _ := strconv.ParseFloat(num[:len(num)-1], 64)
+		ans, _ := length.convertLength(fromUnit, toUnit, convNum)
+		fmt.Println(ans)
+	case "5\n":
+		fmt.Print(`
+Choose the unit to convert from:
+meterpersecond
+kilometerperhour
+kilometerpersecond
+knot
+footpersecond
+inchpersecond
+mach
+`)
+		fromUnit, _ := reader.ReadString('\n')
+		fmt.Print(`
+Choose the unit to convert to:
+meterpersecond
+kilometerperhour
+kilometerpersecond
+knot
+footpersecond
+inchpersecond
+mach
+`)
+		toUnit, _ := reader.ReadString('\n')
+		fmt.Print("Enter the number:\n")
+		num, _ := reader.ReadString('\n')
+		convNum, _ := strconv.ParseFloat(num[:len(num)-1], 64)
+		ans, _ := length.convertLength(fromUnit, toUnit, convNum)
+		fmt.Println(ans)
+	case "6\n":
+		fmt.Print(`
+Choose the unit to convert from:
+second
+millisecond
+minute
+hour
+day
+week
+year
+`)
+		fromUnit, _ := reader.ReadString('\n')
+		fmt.Print(`
+Choose the unit to convert to:
+second
+millisecond
+minute
+hour
+day
+week
+year
+`)
+		toUnit, _ := reader.ReadString('\n')
+		fmt.Print("Enter the number:\n")
+		num, _ := reader.ReadString('\n')
+		convNum, _ := strconv.ParseFloat(num[:len(num)-1], 64)
+		ans, _ := length.convertLength(fromUnit, toUnit, convNum)
+		fmt.Println(ans)
+	case "7\n":
+		fmt.Print(`
+Choose the unit to convert from:
+gram
+kilogram
+tonne
+pound
+ounce
+carat
+stone
+`)
+		fromUnit, _ := reader.ReadString('\n')
+		fmt.Print(`
+Choose the unit to convert to:
+gram
+kilogram
+tonne
+pound
+ounce
+carat
+stone
+`)
+		toUnit, _ := reader.ReadString('\n')
+		fmt.Print("Enter the number:\n")
+		num, _ := reader.ReadString('\n')
+		convNum, _ := strconv.ParseFloat(num[:len(num)-1], 64)
+		ans, _ := length.convertLength(fromUnit, toUnit, convNum)
+		fmt.Println(ans)
+	case "8\n":
+		fmt.Print(`
+Choose the unit to convert from:
+decimal
+binary
+hex
+octal
+`)
+		fromUnit, _ := reader.ReadString('\n')
+		fmt.Print(`
+Choose the unit to convert to:
+decimal
+binary
+hex
+octal
+`)
 		toUnit, _ := reader.ReadString('\n')
 		fmt.Print("Enter the number:\n")
 		num, _ := reader.ReadString('\n')
