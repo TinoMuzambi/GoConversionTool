@@ -38,7 +38,7 @@ func NewLength(tometer float64, tocentimeter float64, tomillimeter float64, toki
 }
 
 func (l *Length) convertLength(fromUnit string, toUnit string, num float64) (float64, error) {
-	meterVal := 0.0
+	meterVal := num
 	if fromUnit != "meter\n" {
 		switch fromUnit {
 		case "centimeter\n":
@@ -58,35 +58,34 @@ func (l *Length) convertLength(fromUnit string, toUnit string, num float64) (flo
 		case "inch\n":
 			meterVal = num / l.toInch
 		case "lightyear\n":
-			meterVal = num / l.toInch
+			meterVal = num / l.toLightYear
 		default:
 			meterVal = 1.0
 		}
-		switch toUnit {
-		case "centimeter\n":
-			return meterVal * l.toCentimeter, nil
-		case "millimeter\n":
-			return meterVal * l.toMillimeter, nil
-		case "kilometer\n":
-			return meterVal * l.toKilometer, nil
-		case "nautmile\n":
-			return meterVal * l.toNauticalMile, nil
-		case "mile\n":
-			return meterVal * l.toMile, nil
-		case "yard\n":
-			return meterVal * l.toYard, nil
-		case "foot\n":
-			return meterVal * l.toFoot, nil
-		case "inch\n":
-			return meterVal * l.toInch, nil
-		case "lightyear\n":
-			return meterVal * l.toLightYear, nil
-		default:
-			return meterVal, nil
-		}
-
 	}
-	return meterVal, nil
+	switch toUnit {
+	case "centimeter\n":
+		return meterVal * l.toCentimeter, nil
+	case "millimeter\n":
+		return meterVal * l.toMillimeter, nil
+	case "kilometer\n":
+		return meterVal * l.toKilometer, nil
+	case "nautmile\n":
+		return meterVal * l.toNauticalMile, nil
+	case "mile\n":
+		return meterVal * l.toMile, nil
+	case "yard\n":
+		return meterVal * l.toYard, nil
+	case "foot\n":
+		return meterVal * l.toFoot, nil
+	case "inch\n":
+		return meterVal * l.toInch, nil
+	case "lightyear\n":
+		return meterVal * l.toLightYear, nil
+	default:
+		return meterVal, nil
+	}
+
 }
 
 //type Area struct {
@@ -179,14 +178,14 @@ Make a selection of the type of conversion you want by entering the number.
 	unit, _ := reader.ReadString('\n')
 	switch unit {
 	case "1\n":
-		fmt.Print("Choose the unit to convert from:")
+		fmt.Print("Choose the unit to convert from:\n")
 		fromUnit, _ := reader.ReadString('\n')
-		fmt.Print("Choose the unit to convert to:")
+		fmt.Print("Choose the unit to convert to:\n")
 		toUnit, _ := reader.ReadString('\n')
-		fmt.Print("Enter the number:")
+		fmt.Print("Enter the number:\n")
 		num, _ := reader.ReadString('\n')
-		numStrip := num[:len(num)-1]
-		convNum, _ := strconv.ParseFloat(numStrip, 64)
-		fmt.Println(length.convertLength(fromUnit, toUnit, convNum))
+		convNum, _ := strconv.ParseFloat(num[:len(num)-1], 64)
+		ans, _ := length.convertLength(fromUnit, toUnit, convNum)
+		fmt.Println(ans)
 	}
 }
