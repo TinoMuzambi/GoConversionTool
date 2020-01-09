@@ -85,21 +85,82 @@ func (l *Length) convertLength(fromUnit string, toUnit string, num float64) (flo
 	default:
 		return meterVal, nil
 	}
-
 }
 
-//type Area struct {
-//	toSquareMeter      float64
-//	toSquareCentimeter float64
-//	toSquareMillimeter float64
-//	toHectare          float64
-//	toAcre             float64
-//	toSquareMile       float64
-//	toSquareYard       float64
-//	toSquareFoot       float64
-//	toSquareInch       float64
-//}
-//
+type Area struct {
+	toSquareMeter      float64
+	toSquareCentimeter float64
+	toSquareMillimeter float64
+	toHectare          float64
+	toAcre             float64
+	toSquareMile       float64
+	toSquareYard       float64
+	toSquareFoot       float64
+	toSquareInch       float64
+}
+
+func NewArea(tosquaremeter float64, tosquarecentimeter float64, tosquaremillimeter float64, tohectare float64,
+	toacre float64, tosquaremile float64, tosquareyard float64, tosquarefoot float64, tosquareinch float64) (*Area, error) {
+	area := &Area{
+		toSquareMeter:      tosquaremeter,
+		toSquareCentimeter: tosquarecentimeter,
+		toSquareMillimeter: tosquaremillimeter,
+		toHectare:          tohectare,
+		toAcre:             toacre,
+		toSquareMile:       tosquaremile,
+		toSquareYard:       tosquareyard,
+		toSquareFoot:       tosquarefoot,
+		toSquareInch:       tosquareinch,
+	}
+	return area, nil
+}
+
+func (a *Area) convertArea(fromUnit string, toUnit string, num float64) (float64, error) {
+	sqmeterval := num
+	if fromUnit != "sqmeter\n" {
+		switch fromUnit {
+		case "sqcentimeter\n":
+			sqmeterval = num / a.toSquareCentimeter
+		case "sqmillimeter\n":
+			sqmeterval = num / a.toSquareMillimeter
+		case "hectare\n":
+			sqmeterval = num / a.toHectare
+		case "acre\n":
+			sqmeterval = num / a.toAcre
+		case "sqmile\n":
+			sqmeterval = num / a.toSquareMile
+		case "sqyard\n":
+			sqmeterval = num / a.toSquareYard
+		case "sqfoot\n":
+			sqmeterval = num / a.toSquareFoot
+		case "sqinch\n":
+			sqmeterval = num / a.toSquareInch
+		default:
+			sqmeterval = 1.0
+		}
+	}
+	switch toUnit {
+	case "sqcentimeter\n":
+		return sqmeterval * a.toSquareCentimeter, nil
+	case "sqmillimeter\n":
+		return sqmeterval * a.toSquareMillimeter, nil
+	case "hectare\n":
+		return sqmeterval * a.toHectare, nil
+	case "acre\n":
+		return sqmeterval * a.toAcre, nil
+	case "sqmile\n":
+		return sqmeterval * a.toSquareMile, nil
+	case "sqyard\n":
+		return sqmeterval * a.toSquareYard, nil
+	case "sqfoot\n":
+		return sqmeterval * a.toSquareFoot, nil
+	case "sqinch\n":
+		return sqmeterval * a.toSquareInch, nil
+	default:
+		return sqmeterval, nil
+	}
+}
+
 //type Volume struct {
 //	toCubicMeter      float64
 //	toCubicCentimeter float64
@@ -157,9 +218,16 @@ func (l *Length) convertLength(fromUnit string, toUnit string, num float64) (flo
 //}
 
 func main() {
+	length, _ := NewLength(1.00, 100.0, 1000.0, 0.001,
+		0.000539956803, 0.000621371192, 1.0936133, 3.2808399, 39.3700787,
+		0.00000000000000010570008)
+	area, _ := NewArea(1.0, 10000, 1000000, 0.0001,
+		0.000247105407, 0.00000038610216, 1.19599005, 10.7639104, 1550.0031)
+
 	fmt.Println("====================================")
 	fmt.Println("Welcome to my Go Conversion Tool")
 	fmt.Println("====================================")
+
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Print(`
 Make a selection of the type of conversion you want by entering the number.
@@ -172,9 +240,6 @@ Make a selection of the type of conversion you want by entering the number.
 7. Mass
 8. Numeral System
 `)
-	length, _ := NewLength(1.00, 100.0, 1000.0, 0.001,
-		0.000539956803, 0.000621371192, 1.0936133, 3.2808399, 39.3700787,
-		0.00000000000000010570008)
 	unit, _ := reader.ReadString('\n')
 	switch unit {
 	case "1\n":
@@ -241,7 +306,7 @@ sqinch
 		fmt.Print("Enter the number:\n")
 		num, _ := reader.ReadString('\n')
 		convNum, _ := strconv.ParseFloat(num[:len(num)-1], 64)
-		ans, _ := length.convertLength(fromUnit, toUnit, convNum)
+		ans, _ := area.convertArea(fromUnit, toUnit, convNum)
 		fmt.Println(ans)
 	case "3\n":
 		fmt.Print(`
