@@ -161,18 +161,78 @@ func (a *Area) convertArea(fromUnit string, toUnit string, num float64) (float64
 	}
 }
 
-//type Volume struct {
-//	toCubicMeter      float64
-//	toCubicCentimeter float64
-//	toCubicMillimeter float64
-//	toLiter           float64
-//	toMilliliter      float64
-//	toCubicFoot       float64
-//	toCubicInch       float64
-//	toCubicYard       float64
-//	toAcreFoot       float64
-//}
-//
+type Volume struct {
+	toLiter           float64
+	toMilliliter      float64
+	toCubicMeter      float64
+	toCubicCentimeter float64
+	toCubicMillimeter float64
+	toCubicFoot       float64
+	toCubicInch       float64
+	toCubicYard       float64
+	toAcreFoot        float64
+}
+
+func NewVolume(toliter float64, tomilliliter float64, tocubicmeter float64, tocubiccentimeter float64,
+	tocubicmillimeter float64, tocubicfoot float64, tocubicinch float64, tocubicyard float64, toacrefoot float64) (*Volume, error) {
+	volume := &Volume{
+		toLiter:           toliter,
+		toMilliliter:      tomilliliter,
+		toCubicMeter:      tocubicmeter,
+		toCubicCentimeter: tocubiccentimeter,
+		toCubicMillimeter: tocubicmillimeter,
+		toCubicFoot:       tocubicfoot,
+		toCubicInch:       tocubicinch,
+		toCubicYard:       tocubicyard,
+		toAcreFoot:        toacrefoot,
+	}
+	return volume, nil
+}
+
+func (v *Volume) convertVolume(fromUnit string, toUnit string, num float64) (float64, error) {
+	literVal := num
+	if fromUnit != "liter\n" {
+		switch fromUnit {
+		case "cbmeter\n":
+			literVal = num / v.toCubicMeter
+		case "cbcentimeter\n":
+			literVal = num / v.toCubicCentimeter
+		case "cbmillimeter\n":
+			literVal = num / v.toCubicMillimeter
+		case "milliliter\n":
+			literVal = num / v.toMilliliter
+		case "cbfoot\n":
+			literVal = num / v.toCubicFoot
+		case "cbinch\n":
+			literVal = num / v.toCubicInch
+		case "cbyard\n":
+			literVal = num / v.toCubicYard
+		case "acrefoot\n":
+			literVal = num / v.toAcreFoot
+		default:
+			literVal = 1.0
+		}
+	}
+	switch toUnit {
+	case "cbmeter\n":
+		return literVal * v.toCubicMeter, nil
+	case "cbcentimeter\n":
+		return literVal * v.toCubicCentimeter, nil
+	case "cbmillimeter\n":
+		return literVal * v.toCubicMillimeter, nil
+	case "milliliter\n":
+		return literVal * v.toMilliliter, nil
+	case "cbfoot\n":
+		return literVal * v.toCubicFoot, nil
+	case "cbinch\n":
+		return literVal * v.toCubicInch, nil
+	case "acrefoot\n":
+		return literVal * v.toAcreFoot, nil
+	default:
+		return literVal, nil
+	}
+}
+
 //type Temperature struct {
 //	toCelsius    float64
 //	toFahrenheit float64
@@ -223,6 +283,8 @@ func main() {
 		0.00000000000000010570008)
 	area, _ := NewArea(1.0, 10000, 1000000, 0.0001,
 		0.000247105407, 0.00000038610216, 1.19599005, 10.7639104, 1550.0031)
+	volume, _ := NewVolume(1.0, 1000, 0.001, 1000, 1000000,
+		0.0353146667, 61.0237441, 0.00130795062, 0.00000081037277)
 
 	fmt.Println("====================================")
 	fmt.Println("Welcome to my Go Conversion Tool")
@@ -338,7 +400,7 @@ acrefoot
 		fmt.Print("Enter the number:\n")
 		num, _ := reader.ReadString('\n')
 		convNum, _ := strconv.ParseFloat(num[:len(num)-1], 64)
-		ans, _ := length.convertLength(fromUnit, toUnit, convNum)
+		ans, _ := volume.convertVolume(fromUnit, toUnit, convNum)
 		fmt.Println(ans)
 	case "4\n":
 		fmt.Print(`
