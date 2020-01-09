@@ -233,12 +233,34 @@ func (v *Volume) convertVolume(fromUnit string, toUnit string, num float64) (flo
 	}
 }
 
-//type Temperature struct {
-//	toCelsius    float64
-//	toFahrenheit float64
-//	toKelvin     float64
-//}
-//
+type Temperature struct {
+}
+
+func NewTemperature() (*Temperature, error) {
+	temperature := &Temperature{}
+	return temperature, nil
+}
+
+func (t *Temperature) convertTemperature(fromUnit string, toUnit string, num float64) (float64, error) {
+	celsiusVal := num
+	switch fromUnit {
+	case "fahrenheit\n":
+		celsiusVal = (num - 32) * 5 / 9
+	case "kelvin\n":
+		celsiusVal = num - 273.15
+	default:
+		celsiusVal = num
+	}
+	switch toUnit {
+	case "fahrenheit\n":
+		return (celsiusVal * 9 / 5) + 32, nil
+	case "kelvin\n":
+		return celsiusVal + 273.15, nil
+	default:
+		return celsiusVal, nil
+	}
+}
+
 //type Speed struct {
 //	toMeterPerSecond     float64
 //	toKilometerPerHour   float64
@@ -285,6 +307,7 @@ func main() {
 		0.000247105407, 0.00000038610216, 1.19599005, 10.7639104, 1550.0031)
 	volume, _ := NewVolume(1.0, 1000, 0.001, 1000, 1000000,
 		0.0353146667, 61.0237441, 0.00130795062, 0.00000081037277)
+	temperature, _ := NewTemperature()
 
 	fmt.Println("====================================")
 	fmt.Println("Welcome to my Go Conversion Tool")
@@ -420,7 +443,7 @@ kelvin
 		fmt.Print("Enter the number:\n")
 		num, _ := reader.ReadString('\n')
 		convNum, _ := strconv.ParseFloat(num[:len(num)-1], 64)
-		ans, _ := length.convertLength(fromUnit, toUnit, convNum)
+		ans, _ := temperature.convertTemperature(fromUnit, toUnit, convNum)
 		fmt.Println(ans)
 	case "5\n":
 		fmt.Print(`
