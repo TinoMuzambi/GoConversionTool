@@ -391,16 +391,64 @@ func (t *Time) convertTime(fromUnit string, toUnit string, num float64) (float64
 	}
 }
 
-//type Mass struct {
-//	toGram     float64
-//	toKilogram float64
-//	toTonne    float64
-//	toPound    float64
-//	toOunce    float64
-//	toCarat    float64
-//	toStone    float64
-//}
-//
+type Mass struct {
+	toGram     float64
+	toKilogram float64
+	toTonne    float64
+	toPound    float64
+	toOunce    float64
+	toCarat    float64
+	toStone    float64
+}
+
+func NewMass(togram float64, tokilogram float64, totonne float64, topound float64, toounce float64, tocarat float64,
+	tostone float64) (*Mass, error) {
+	mass := &Mass{
+		toGram:     togram,
+		toKilogram: tokilogram,
+		toTonne:    totonne,
+		toPound:    topound,
+		toOunce:    toounce,
+		toCarat:    tocarat,
+		toStone:    tostone,
+	}
+	return mass, nil
+}
+
+func (m *Mass) convertMass(fromUnit string, toUnit string, num float64) (float64, error) {
+	gramVal := num
+	if fromUnit != "gram\n" {
+		switch fromUnit {
+		case "kilogram\n":
+			gramVal = num / m.toKilogram
+		case "tonne\n":
+			gramVal = num / m.toTonne
+		case "pound\n":
+			gramVal = num / m.toPound
+		case "ounce\n":
+			gramVal = num / m.toOunce
+		case "stone\n":
+			gramVal = num / m.toStone
+		default:
+			gramVal = 1.0
+		}
+	}
+	switch toUnit {
+	case "kilogram\n":
+		return gramVal * m.toKilogram, nil
+	case "tonne\n":
+		return gramVal * m.toTonne, nil
+	case "pound\n":
+		return gramVal * m.toPound, nil
+	case "ounce\n":
+		return gramVal * m.toOunce, nil
+	case "stone\n":
+		return gramVal * m.toStone, nil
+	default:
+		return gramVal, nil
+	}
+}
+
 //type NumeralSystem struct {
 //	toDecimal     int
 //	toBinary      string
@@ -421,6 +469,8 @@ func main() {
 		2.23693629, 3.2808399, 39.3700787, 0.0029385836)
 	time, _ := NewTime(1.0, 1000, 0.0166666667, 0.000277777778, 0.000011574074,
 		0.0000016534392, 0.000000031709792)
+	mass, _ := NewMass(1.0, 0.001, 1/1000000, 0.00220462262, 0.0352739619,
+		5, 0.000157473044)
 
 	fmt.Println("====================================")
 	fmt.Println("Welcome to my Go Conversion Tool")
@@ -640,7 +690,7 @@ stone
 		fmt.Print("Enter the number:\n")
 		num, _ := reader.ReadString('\n')
 		convNum, _ := strconv.ParseFloat(num[:len(num)-1], 64)
-		ans, _ := length.convertLength(fromUnit, toUnit, convNum)
+		ans, _ := mass.convertMass(fromUnit, toUnit, convNum)
 		fmt.Println(ans)
 	case "8\n":
 		fmt.Print(`
