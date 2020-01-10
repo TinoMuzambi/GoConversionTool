@@ -261,17 +261,74 @@ func (t *Temperature) convertTemperature(fromUnit string, toUnit string, num flo
 	}
 }
 
-//type Speed struct {
-//	toMeterPerSecond     float64
-//	toKilometerPerHour   float64
-//	toKilometerPerSecond float64
-//	toKnot               float64
-//	toMilePerHour        float64
-//	toFootPerSecond      float64
-//	toInchPerSecond      float64
-//	toMach               float64
-//}
-//
+type Speed struct {
+	toMeterPerSecond     float64
+	toKilometerPerHour   float64
+	toKilometerPerSecond float64
+	toKnot               float64
+	toMilePerHour        float64
+	toFootPerSecond      float64
+	toInchPerSecond      float64
+	toMach               float64
+}
+
+func NewSpeed(tometerspersecond float64, tokilometersperhour float64, tokilometerspersecond float64, toknot float64,
+	tomileperhour float64, tofootpersecond float64, toinchpersecond float64, tomach float64) (*Speed, error) {
+	speed := &Speed{
+		toMeterPerSecond:     tometerspersecond,
+		toKilometerPerHour:   tokilometersperhour,
+		toKilometerPerSecond: tokilometerspersecond,
+		toKnot:               toknot,
+		toMilePerHour:        tomileperhour,
+		toFootPerSecond:      tofootpersecond,
+		toInchPerSecond:      toinchpersecond,
+		toMach:               tomach,
+	}
+	return speed, nil
+}
+
+func (s *Speed) convertSpeed(fromUnit string, toUnit string, num float64) (float64, error) {
+	mpsVal := num
+	if fromUnit != "meterspersecond\n" {
+		switch fromUnit {
+		case "kilometersperhour\n":
+			mpsVal = num / s.toKilometerPerHour
+		case "kilometerspersecond\n":
+			mpsVal = num / s.toKilometerPerSecond
+		case "knot\n":
+			mpsVal = num / s.toKnot
+		case "mileperhour\n":
+			mpsVal = num / s.toMilePerHour
+		case "footpersecond\n":
+			mpsVal = num / s.toFootPerSecond
+		case "inchpersecond\n":
+			mpsVal = num / s.toInchPerSecond
+		case "mach\n":
+			mpsVal = num / s.toMach
+		default:
+			mpsVal = 1.0
+		}
+	}
+	switch toUnit {
+	case "kilometersperhour\n":
+		return mpsVal * s.toKilometerPerHour, nil
+	case "kilometerspersecond\n":
+		return mpsVal * s.toKilometerPerSecond, nil
+	case "knot\n":
+		return mpsVal * s.toKnot, nil
+	case "mileperhour\n":
+		return mpsVal * s.toMilePerHour, nil
+	case "footpersecond\n":
+		return mpsVal * s.toFootPerSecond, nil
+	case "inchpersecond\n":
+		return mpsVal * s.toInchPerSecond, nil
+	case "mach\n":
+		return mpsVal * s.toMach, nil
+	default:
+		return mpsVal, nil
+	}
+}
+
 //type Time struct {
 //	toSecond      float64
 //	toMillisecond float64
@@ -308,6 +365,8 @@ func main() {
 	volume, _ := NewVolume(1.0, 1000, 0.001, 1000, 1000000,
 		0.0353146667, 61.0237441, 0.00130795062, 0.00000081037277)
 	temperature, _ := NewTemperature()
+	speed, _ := NewSpeed(1.0, 3.6, 0.001, 1.94384449,
+		2.23693629, 3.2808399, 39.3700787, 0.0029385836)
 
 	fmt.Println("====================================")
 	fmt.Println("Welcome to my Go Conversion Tool")
@@ -471,7 +530,7 @@ mach
 		fmt.Print("Enter the number:\n")
 		num, _ := reader.ReadString('\n')
 		convNum, _ := strconv.ParseFloat(num[:len(num)-1], 64)
-		ans, _ := length.convertLength(fromUnit, toUnit, convNum)
+		ans, _ := speed.convertSpeed(fromUnit, toUnit, convNum)
 		fmt.Println(ans)
 	case "6\n":
 		fmt.Print(`
