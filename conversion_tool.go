@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 )
 
 type Length struct {
@@ -449,12 +450,49 @@ func (m *Mass) convertMass(fromUnit string, toUnit string, num float64) (float64
 	}
 }
 
-//type NumeralSystem struct {
-//	toDecimal     int
-//	toBinary      string
-//	toHexadecimal string
-//	toOctal       int
-//}
+type NumeralSystem struct {
+}
+
+func NewNumeralSystem() (*NumeralSystem, error) {
+	numeralSystem := &NumeralSystem{}
+	return numeralSystem, nil
+}
+
+func hexaNumberToInteger(hexaString string) string {
+	// replace 0x or 0X with empty String
+	numberStr := strings.Replace(hexaString, "0x", "", -1)
+	numberStr = strings.Replace(numberStr, "0X", "", -1)
+	return numberStr
+}
+
+func (n *NumeralSystem) convertNumeralSystems(fromUnit string, toUnit string, num string) (string, error) {
+	decimalVal := num
+	if fromUnit != "decimal" {
+		switch fromUnit {
+		case "binary\n":
+			intString, _ := strconv.ParseInt(hexaNumberToInteger(num), 2, 64)
+			decimalVal = strconv.FormatInt(intString, 10)
+		case "hex\n":
+			intString, _ := strconv.ParseInt(hexaNumberToInteger(num), 16, 64)
+			decimalVal = strconv.FormatInt(intString, 10)
+		case "octal\n":
+			intString, _ := strconv.ParseInt(hexaNumberToInteger(num), 8, 64)
+			decimalVal = strconv.FormatInt(intString, 10)
+		}
+	}
+	switch toUnit {
+	case "binary\n":
+		intString, _ := strconv.Atoi(decimalVal)
+		return strconv.FormatInt(int64(intString), 2), nil
+	case " hex\n":
+		intString, _ := strconv.Atoi(decimalVal)
+		return strconv.FormatInt(int64(intString), 16), nil
+	case "octal\n":
+		intString, _ := strconv.Atoi(decimalVal)
+		return strconv.FormatInt(int64(intString), 8), nil
+	}
+	return decimalVal, nil
+}
 
 func main() {
 	length, _ := NewLength(1.00, 100.0, 1000.0, 0.001,
@@ -471,6 +509,7 @@ func main() {
 		0.0000016534392, 0.000000031709792)
 	mass, _ := NewMass(1.0, 0.001, 1/1000000, 0.00220462262, 0.0352739619,
 		5, 0.000157473044)
+	numeralSystem, _ := NewNumeralSystem()
 
 	fmt.Println("====================================")
 	fmt.Println("Welcome to my Go Conversion Tool")
@@ -711,8 +750,8 @@ octal
 		toUnit, _ := reader.ReadString('\n')
 		fmt.Print("Enter the number:\n")
 		num, _ := reader.ReadString('\n')
-		convNum, _ := strconv.ParseFloat(num[:len(num)-1], 64)
-		ans, _ := length.convertLength(fromUnit, toUnit, convNum)
+		convNum := num[:len(num)-1]
+		ans, _ := numeralSystem.convertNumeralSystems(fromUnit, toUnit, convNum)
 		fmt.Println(ans)
 	}
 }
