@@ -467,7 +467,7 @@ func hexaNumberToInteger(hexaString string) string {
 
 func (n *NumeralSystem) convertNumeralSystems(fromUnit string, toUnit string, num string) (string, error) {
 	decimalVal := num
-	if fromUnit != "decimal" {
+	if fromUnit != "decimal\n" {
 		switch fromUnit {
 		case "binary\n":
 			intString, _ := strconv.ParseInt(hexaNumberToInteger(num), 2, 64)
@@ -478,20 +478,23 @@ func (n *NumeralSystem) convertNumeralSystems(fromUnit string, toUnit string, nu
 		case "octal\n":
 			intString, _ := strconv.ParseInt(hexaNumberToInteger(num), 8, 64)
 			decimalVal = strconv.FormatInt(intString, 10)
+		default:
+			decimalVal = num
 		}
 	}
 	switch toUnit {
 	case "binary\n":
 		intString, _ := strconv.Atoi(decimalVal)
 		return strconv.FormatInt(int64(intString), 2), nil
-	case " hex\n":
+	case "hex\n":
 		intString, _ := strconv.Atoi(decimalVal)
 		return strconv.FormatInt(int64(intString), 16), nil
 	case "octal\n":
 		intString, _ := strconv.Atoi(decimalVal)
 		return strconv.FormatInt(int64(intString), 8), nil
+	default:
+		return decimalVal, nil
 	}
-	return decimalVal, nil
 }
 
 func main() {
@@ -752,6 +755,6 @@ octal
 		num, _ := reader.ReadString('\n')
 		convNum := num[:len(num)-1]
 		ans, _ := numeralSystem.convertNumeralSystems(fromUnit, toUnit, convNum)
-		fmt.Println(ans)
+		fmt.Println(strings.ToUpper(ans))
 	}
 }
