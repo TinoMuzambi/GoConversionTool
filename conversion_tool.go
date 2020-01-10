@@ -329,16 +329,68 @@ func (s *Speed) convertSpeed(fromUnit string, toUnit string, num float64) (float
 	}
 }
 
-//type Time struct {
-//	toSecond      float64
-//	toMillisecond float64
-//	toMinute      float64
-//	toHour        float64
-//	toDay         float64
-//	toWeek        float64
-//	toYear        float64
-//}
-//
+type Time struct {
+	toSecond      float64
+	toMillisecond float64
+	toMinute      float64
+	toHour        float64
+	toDay         float64
+	toWeek        float64
+	toYear        float64
+}
+
+func NewTime(tosecond float64, tomillisecond float64, tominute float64, tohour float64, today float64, toweek float64,
+	toyear float64) (*Time, error) {
+	time := &Time{
+		toSecond:      tosecond,
+		toMillisecond: tomillisecond,
+		toMinute:      tominute,
+		toHour:        tohour,
+		toDay:         today,
+		toWeek:        toweek,
+		toYear:        toyear,
+	}
+	return time, nil
+}
+
+func (t *Time) convertTime(fromUnit string, toUnit string, num float64) (float64, error) {
+	secondVal := num
+	if fromUnit != "second\n" {
+		switch fromUnit {
+		case "millisecond\n":
+			secondVal = num / t.toMillisecond
+		case "minute\n":
+			secondVal = num / t.toMinute
+		case "hour\n":
+			secondVal = num / t.toHour
+		case "day\n":
+			secondVal = num / t.toDay
+		case "week\n":
+			secondVal = num / t.toWeek
+		case "year":
+			secondVal = num / t.toYear
+		default:
+			secondVal = 1.0
+		}
+	}
+	switch toUnit {
+	case "millisecond\n":
+		return secondVal * t.toMillisecond, nil
+	case "minute\n":
+		return secondVal * t.toMinute, nil
+	case "hour\n":
+		return secondVal * t.toHour, nil
+	case "day\n":
+		return secondVal * t.toDay, nil
+	case "week\n":
+		return secondVal * t.toWeek, nil
+	case "year":
+		return secondVal * t.toYear, nil
+	default:
+		return secondVal, nil
+	}
+}
+
 //type Mass struct {
 //	toGram     float64
 //	toKilogram float64
@@ -367,6 +419,8 @@ func main() {
 	temperature, _ := NewTemperature()
 	speed, _ := NewSpeed(1.0, 3.6, 0.001, 1.94384449,
 		2.23693629, 3.2808399, 39.3700787, 0.0029385836)
+	time, _ := NewTime(1.0, 1000, 0.0166666667, 0.000277777778, 0.000011574074,
+		0.0000016534392, 0.000000031709792)
 
 	fmt.Println("====================================")
 	fmt.Println("Welcome to my Go Conversion Tool")
@@ -558,7 +612,7 @@ year
 		fmt.Print("Enter the number:\n")
 		num, _ := reader.ReadString('\n')
 		convNum, _ := strconv.ParseFloat(num[:len(num)-1], 64)
-		ans, _ := length.convertLength(fromUnit, toUnit, convNum)
+		ans, _ := time.convertTime(fromUnit, toUnit, convNum)
 		fmt.Println(ans)
 	case "7\n":
 		fmt.Print(`
